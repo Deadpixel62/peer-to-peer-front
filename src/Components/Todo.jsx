@@ -2,10 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AddTodo } from "../actions";
+import { useSelector } from "react-redux";
 
 function Todo() {
   const [userInput, setUserInput] = useState({ title: "", description: "" });
-
+  const loggedInUser = useSelector((state) => state.loggedInUser);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -21,15 +22,26 @@ function Todo() {
     console.log(e.target.value);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    userInput.title.trim().length != 0
+      ? dispatch(AddTodo(userInput))
+      : alert("Please enter a To-Do");
+    setUserInput({ title: "", description: "" });
+  };
+
   return (
     <div>
       <form
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
         onSubmit={(e) => {
-          e.preventDefault();
-          userInput.title.trim().length != 0
-            ? dispatch(AddTodo(userInput))
-            : alert("Please enter a To-Do");
-          setUserInput({ title: "", description: "" });
+          loggedInUser.user
+            ? handleSubmit(e)
+            : alert("Please login to add a To-Do");
         }}
       >
         <input
@@ -39,16 +51,17 @@ function Todo() {
           placeholder="Enter a Todo"
           onChange={handleChange}
         />
-        <textarea
+        <input
+          type="text"
           onChange={handleDescription}
           value={userInput.description}
+          style={{ width: "30%" }}
           placeholder="Enter a description.."
         />
-        <label>
-          Enter a Due Date:
-          <input type="date" onChange={handleDate} />
-        </label>
-        <input type="submit" />
+
+        <input type="date" onChange={handleDate} />
+
+        <input value="Add todo" type="submit" />
       </form>
     </div>
   );
