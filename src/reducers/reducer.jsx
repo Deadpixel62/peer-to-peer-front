@@ -34,7 +34,10 @@ const Reducer = (state = initialState, action) => {
       console.log(state);
       console.log(action);
       axios
-        .post("http://localhost:5000/todos/addTodo", action.payload)
+        .post(
+          "https://todolist-appli.herokuapp.com/todos/addTodo",
+          action.payload
+        )
         .then((res) => {
           let activityId = myData(res.data);
           let user = {
@@ -43,7 +46,7 @@ const Reducer = (state = initialState, action) => {
           };
           console.log("°°°°°", user);
           axios
-            .post(`http://localhost:5000/user/addTodo`, user)
+            .post(`https://todolist-appli.herokuapp.com/user/addTodo`, user)
             .then((res) => console.log("$$$$$", res))
             .catch((err) => console.log(err));
         })
@@ -51,13 +54,16 @@ const Reducer = (state = initialState, action) => {
       return { ...state, todos: [...state.todos, action.payload] };
 
     case "RemoveTodo":
-      console.log(action.payload);
+      console.log("====", action.payload);
       axios
-        .post("http://localhost:4000/todo/removeTodo", action.payload)
-        .then((res) => console.log(res.data));
+        .delete("http://localhost:5000/todos/removeTodo", {
+          data: action.payload,
+        })
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err));
       return {
         ...state,
-        todos: state.todos.filter((el) => el.id != action.payload.id),
+        todos: state.todos.filter((el) => el._id != action.payload._id),
       };
 
     case "ToggleTodo":
@@ -68,7 +74,7 @@ const Reducer = (state = initialState, action) => {
       };
 
       axios
-        .put("http://localhost:5000/todos/toggleCompleted", todo)
+        .put("https://todolist-appli.herokuapp.com/todos/toggleCompleted", todo)
         .then((res) => console.log(res.data));
 
       return {
