@@ -82,15 +82,6 @@ function Login() {
         />
         <input type="submit" value="Log in" />
       </form>
-      <button
-        onClick={() =>
-          axios
-            .get(`http://localhost:5000/user/62417f573109654fa462d04b`)
-            .then((res) => console.log(res))
-        }
-      >
-        Log
-      </button>
     </div>
   );
 }

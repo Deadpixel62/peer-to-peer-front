@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import TodoApp from "./Components/todoApp";
 import { Routes, Route, Link } from "react-router-dom";
 import Login from "./Components/login";
