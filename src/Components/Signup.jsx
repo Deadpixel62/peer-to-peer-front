@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useState, useEffect } from "react";
-import { setLoggedInUser, logout } from "../actions";
+import { setLoggedInUser, logout, setRegisteredUser } from "../actions";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,6 @@ function Signup() {
     const activeUser = localStorage.getItem("user");
     if (activeUser) {
       const foundUser = JSON.parse(activeUser);
-      console.log("====", foundUser);
       dispatch(setLoggedInUser(foundUser.user));
       axios
         .get(`http://localhost:5000/user/${foundUser.user.userId}`)
@@ -35,6 +34,7 @@ function Signup() {
       .then((res) => navigate("/login"))
       .catch((err) => console.log(err));
 
+    dispatch(setRegisteredUser(user.email));
     setUser({ email: "" });
   };
 
@@ -56,7 +56,7 @@ function Signup() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        Sign up :
+        <h1>Register:</h1>
         <input
           type="email"
           required

@@ -38,3 +38,10 @@ export const logout = () => {
     type: "logout",
   };
 };
+
+export const setRegisteredUser = (user) => {
+  return {
+    type: "setRegisteredUser",
+    payload: user,
+  };
+};

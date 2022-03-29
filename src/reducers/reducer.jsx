@@ -3,36 +3,33 @@ import axios from "axios";
 const initialState = {
   todos: [],
   loggedInUser: {},
+  registeredUser: "",
 };
 
 const myData = function (data) {
   let myId;
   myId = data.newTodo._id;
-  console.log(myId);
   return myId;
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "setLoggedInUser":
+    case "setRegisteredUser":
       console.log(action);
+      return { ...state, registeredUser: action.payload };
+    case "setLoggedInUser":
       return { ...state, loggedInUser: action.payload };
 
     case "logout":
       return { ...state, loggedInUser: {}, todos: [] };
 
     case "SetTodo":
-      console.log("*****************");
-      console.log(action);
-      console.log("****************");
       return {
         ...state,
         todos: action.payload,
       };
 
     case "AddTodo":
-      console.log(state);
-      console.log(action);
       axios
         .post(
           "https://todolist-appli.herokuapp.com/todos/addTodo",
@@ -44,22 +41,18 @@ const Reducer = (state = initialState, action) => {
             userId: state.loggedInUser.user.userId,
             activityId,
           };
-          console.log("°°°°°", user);
           axios
             .post(`https://todolist-appli.herokuapp.com/user/addTodo`, user)
-            .then((res) => console.log("$$$$$", res))
             .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
       return { ...state, todos: [...state.todos, action.payload] };
 
     case "RemoveTodo":
-      console.log("====", action.payload);
       axios
         .delete("http://localhost:5000/todos/removeTodo", {
           data: action.payload,
         })
-        .then((res) => console.log(res.data))
         .catch((err) => console.log(err));
       return {
         ...state,
@@ -67,15 +60,15 @@ const Reducer = (state = initialState, action) => {
       };
 
     case "ToggleTodo":
-      console.log(state);
       let todo = {
         _id: action.payload._id,
         completed: !action.payload.completed,
       };
 
-      axios
-        .put("https://todolist-appli.herokuapp.com/todos/toggleCompleted", todo)
-        .then((res) => console.log(res.data));
+      axios.put(
+        "https://todolist-appli.herokuapp.com/todos/toggleCompleted",
+        todo
+      );
 
       return {
         ...state,

@@ -19,7 +19,6 @@ function Todo() {
 
   const handleDate = (e) => {
     setUserInput({ ...userInput, date: e.target.value });
-    console.log(e.target.value);
   };
 
   const handleSubmit = (e) => {

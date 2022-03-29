@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [user, setUser] = useState({ email: "" });
+  const registeredUser = useSelector((state) => state.registeredUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,7 +16,6 @@ function Login() {
     if (activeUser) {
       const foundUser = JSON.parse(activeUser);
       dispatch(setLoggedInUser(foundUser));
-      console.log(foundUser);
       axios
         .get(`http://localhost:5000/user/${foundUser.user.userId}`)
         .then((res) => {
@@ -24,23 +24,25 @@ function Login() {
     }
   }, []);
 
+  useEffect(() => {
+    if (registeredUser !== "") {
+      setUser({ email: registeredUser });
+    }
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(user.email);
     axios
       .post("http://localhost:5000/login", user)
       .then((res) => {
-        console.log(res);
         dispatch(setLoggedInUser(res.data));
         navigate("/");
         localStorage.setItem("user", JSON.stringify(res.data));
         const foundUser = res.data.user;
-        console.log("======", foundUser);
         axios
           .get(`http://localhost:5000/user/${foundUser.user.userId}`)
           .then((res) => {
             setUser(res.data);
-            console.log("======", res);
           });
       })
       .catch((err) => console.log(err));
@@ -73,6 +75,7 @@ function Login() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        <h1>Log in:</h1>
         <input
           type="email"
           required
